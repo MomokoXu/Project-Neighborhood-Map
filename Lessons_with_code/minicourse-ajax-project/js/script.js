@@ -33,7 +33,9 @@ function loadData() {
                             + article.headline.main+'</a>' + '<p>' + article.snippet
                             + '</p>' + '</li>');
         };
-    })
+    }).error(function(e){
+        $nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
+    });
     return false;
 };
 
