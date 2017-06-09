@@ -28,20 +28,20 @@ function loadCatClicker() {
 
   listCats.forEach(function(element, index) {
     var cat = document.getElementById("cat" + index);
-    var catDisplay = document.getElementById("cat-display");
+    var catDisplay = document.getElementById("cat-display" + index);
     cat.innerHTML = "<h2>" + element.name + "</h2>";
     cat.addEventListener("click",(function(e) {
       return function() {
         catDisplay.style.display = "inline";
         catDisplay.innerHTML = "<h3>" + e.name + "</h3>"
-                             + "<p'> Clicks: " + e.clicks + "</p>"
+                             + "<p> Clicks: " + e.clicks + "</p>"
                              + "<img src=" + e.http + " /> ";
         catDisplay.onclick = (function(e) {
           return function() {
             console.log("display clicked");
             e.clicks++;
             catDisplay.innerHTML = "<h3>" + e.name + "</h3>"
-                                 + "<p'> Clicks: " + e.clicks + "</p>"
+                                 + "<p> Clicks: " + e.clicks + "</p>"
                                  + "<img src=" + e.http + " /> ";
             };
           })(e);
