@@ -41,6 +41,12 @@ function loadData() {
     // wiki endpoint
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='
                     + cityStr + '&format=json&callback=wikiCallback';
+    // error handling:
+    // if no response after 8000 miliseconds later, text for error will show up
+    var wikiRequestTimeout = setTimeout(function(){
+        $wikiElem.text("Failed to get wikipedia resources");
+    }, 8000);
+
     // ajax request object
     $.ajax({
         url: wikiUrl,
@@ -56,6 +62,9 @@ function loadData() {
                 $wikiElem.append('<li><a href="' + url + '">' + articleStr
                                     + '</a></li>');
             };
+            // use this clearTimeout, otherwise no matter request is successful
+            // or not, wiki area will replaced with the error message.
+            clearTimeout(wikiRequestTimeout);
         }
 
     });
