@@ -1,4 +1,4 @@
-function loadCatClicker() {
+  function loadCatClicker() {
   var listCats = [
     {
       name: "Kitten1",
@@ -18,17 +18,23 @@ function loadCatClicker() {
      id: 2,
     clicks: 0
     },
+
     {name: "Kitten4",
     http:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
      id: 3,
     clicks: 0
+    },
+
+    {name: "Kitten5",
+    http:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
+     id: 4,
+    clicks: 0
     }
-
   ];
-
+  /*
   listCats.forEach(function(element, index) {
     var cat = document.getElementById("cat" + index);
-    var catDisplay = document.getElementById("cat-display" + index);
+    var catDisplay = document.getElementById("cat-display");
     cat.innerHTML = "<h2>" + element.name + "</h2>";
     cat.addEventListener("click",(function(e) {
       return function() {
@@ -49,4 +55,39 @@ function loadCatClicker() {
       })(element)
     );
   });
+  */
+  var cat = document.getElementById("cat");
+  var catDisplay = document.getElementById("cat-display");
+
+  //cat.addEventListener("click", displayFrame);
+  cat.addEventListener("change", displayCat);
+  /*
+  function displayFrame() {
+    catDisplay.style.display = "inline";
+    catDisplay.innerHTML = "<h3>" + "Please Select A Kitten" + "</h3>";
+  }
+  */
+  function displayCat() {
+    var curCat = listCats[$("#cat").val()];
+    if (curCat == null) {
+      catDisplay.innerHTML = "<div class='flash'>" + "Please Select A Kitten" + "</div>";
+    } else
+    {
+      catDisplay.style.display = "inline";
+      catDisplay.innerHTML = "<h2>" + curCat.name + "</h2>"
+                           + "<p> Clicks: " + curCat.clicks + "</p>"
+                           + "<img src=" + curCat.http + " /> ";
+      catDisplay.onclick = (showClicks);
+    }
+  }
+
+  function showClicks() {
+    console.log("display clicked");
+    var curCat = listCats[$("#cat").val()];
+    curCat.clicks++;
+    catDisplay.innerHTML = "<h2>" + curCat.name + "</h2>"
+                         + "<p> Clicks: " + curCat.clicks + "</p>"
+                         + "<img src=" + curCat.http + " /> ";
+  }
+
 }
