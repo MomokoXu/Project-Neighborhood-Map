@@ -56,6 +56,8 @@
     );
   });
   */
+
+  //change to show dropdown list for kittens
   var cat = document.getElementById("cat");
   var catDisplay = document.getElementById("cat-display");
 
