@@ -20,7 +20,8 @@ $(function(){
     var octopus = {
         addNewNote: function(noteStr) {
             model.add({
-                content: noteStr
+                content: noteStr,
+                dateSubmitted: Date.now()
             });
             view.render();
         },
@@ -42,13 +43,7 @@ $(function(){
             var newNoteForm = $('#new-note-form');
             var newNoteContent = $('#new-note-content');
             newNoteForm.submit(function(e){
-            var dateObj = new Date();
-            var month = dateObj.getUTCMonth() + 1; //months from 1-12
-            var day = dateObj.getUTCDate();
-            var year = dateObj.getUTCFullYear();
-
-            curdate = year + "/" + month + "/" + day;
-                octopus.addNewNote(newNoteContent.val() + ' '+ curdate);
+                octopus.addNewNote(newNoteContent.val());
                 newNoteContent.val('');
                 e.preventDefault();
             });
@@ -57,9 +52,10 @@ $(function(){
         render: function(){
             var htmlStr = '';
             octopus.getNotes().forEach(function(note){
-                htmlStr += '<li class="note">'+
-                        note.content +
-                    '</li>';
+                htmlStr += '<li class="note">'
+                        + note.content + '<span class="note-date">'
+                        + new Date(note.dateSubmitted).toString()
+                        + '</span></li>';
             });
             this.noteList.html( htmlStr );
         }
