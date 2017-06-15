@@ -25,7 +25,7 @@ h3 {
   line-height: 23px;
 }
 
-.cat-display {
+.cat-display, img#cat-img {
   cursor: pointer;
 }
 

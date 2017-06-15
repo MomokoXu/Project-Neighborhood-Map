@@ -1,4 +1,138 @@
-  function loadCatClicker() {
+/* =========== Model ==========*/
+var model = {
+  curCat:null,
+  listCats: [
+    {
+      name: "Kitten1",
+      http: "https://static1.squarespace.com/static/54e8ba93e4b07c3f655b452e/t/56c2a04520c64707756f4267/1493764650017/",
+      id: 0,
+      clicks: 0
+    },
+    {
+      name: "Kitten2",
+      http: "https://www.pets4homes.co.uk/images/articles/1646/large/kitten-emergencies-signs-to-look-out-for-537479947ec1c.jpg",
+      id: 1,
+      clicks: 0
+    },
+
+    {name: "Kitten3",
+    http:"https://pbs.twimg.com/profile_images/562466745340817408/_nIu8KHX.jpeg",
+     id: 2,
+    clicks: 0
+    },
+
+    {name: "Kitten4",
+    http:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
+     id: 3,
+    clicks: 0
+    },
+
+    {name: "Kitten5",
+    http:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
+     id: 4,
+    clicks: 0
+    }
+  ]
+};
+
+/* ============ Octopus ========== */
+var octopus = {
+  init: function() {
+    // set current cat to the first one in the cat list
+    model.curCat = model.listCats[0];
+    // tell our views to initialize
+    catListView.init();
+    catView.init();
+  },
+
+  getCurCat: function() {
+    return model.curCat;
+  },
+
+  getCats: function() {
+    return model.listCats;
+  },
+
+  setCurCat: function(cat) {
+    model.curCat = cat;
+  },
+
+  incrementCounter: function() {
+    model.curCat.clicks++;
+    catView.render();
+  }
+};
+
+
+/* ========== View =========== */
+
+var catView = {
+  init: function() {
+    // store pointers to our DOM elements for easy access later
+    this.catNameElem = document.getElementById('cat-name');
+    this.catImageElem = document.getElementById('cat-img');
+    this.countElem = document.getElementById('cat-count');
+    // on click, increment the current cat's counter
+    this.catImageElem.addEventListener('click', function(){
+        octopus.incrementCounter();
+    });
+
+    this.render();
+  },
+
+  render: function() {
+    // update the DOM elements with values from the current cat
+    var curCat = octopus.getCurCat();
+    this.catNameElem.textContent = curCat.name;
+    this.countElem.textContent = curCat.clicks;
+    this.catImageElem.src = curCat.http;
+  }
+};
+
+var catListView = {
+  init: function() {
+    // store the DOM element for easy access later
+    this.catListElem = document.getElementById('cat-list');
+    // render this view (update the DOM elements with the right values)
+    this.render();
+  },
+
+  render: function() {
+    var cat, elem, i;
+    // get the cats we'll be rendering from the octopus
+    var cats = octopus.getCats();
+    // empty the cat list
+    this.catListElem.innerHTML = '';
+    // loop over the cats
+    for (i = 0; i < cats.length; i++) {
+        // this is the cat we're currently looping over
+        cat = cats[i];
+
+        // make a new cat list item and set its text
+        elem = document.createElement("div");
+        elem.className = "col-md-2";
+        elem.innerHTML = '<h2>' + cat.name + '</h2>';
+
+        // on click, setCurrentCat and render the catView
+        // (this uses our closure-in-a-loop trick to connect the value
+        //  of the cat variable to the click event function)
+        elem.addEventListener('click', (function(catCopy) {
+            return function() {
+                octopus.setCurCat(catCopy);
+                catView.render();
+            };
+        })(cat));
+
+        // finally, add the element to the list
+        this.catListElem.appendChild(elem);
+    }
+  }
+};
+octopus.init();
+
+// old implmenetation
+/*
+function loadCatClicker() {
   var listCats = [
     {
       name: "Kitten1",
@@ -31,6 +165,7 @@
     clicks: 0
     }
   ];
+  */
   /*
   listCats.forEach(function(element, index) {
     var cat = document.getElementById("cat" + index);
@@ -56,19 +191,19 @@
     );
   });
   */
-
+  /*
   //change to show dropdown list for kittens
   var cat = document.getElementById("cat");
   var catDisplay = document.getElementById("cat-display");
 
   //cat.addEventListener("click", displayFrame);
   cat.addEventListener("change", displayCat);
-  /*
+
   function displayFrame() {
     catDisplay.style.display = "inline";
     catDisplay.innerHTML = "<h3>" + "Please Select A Kitten" + "</h3>";
   }
-  */
+
   function displayCat() {
     var curCat = listCats[$("#cat").val()];
     if (curCat == null) {
@@ -91,5 +226,5 @@
                          + "<p> Clicks: " + curCat.clicks + "</p>"
                          + "<img src=" + curCat.http + " /> ";
   }
-
 }
+*/
