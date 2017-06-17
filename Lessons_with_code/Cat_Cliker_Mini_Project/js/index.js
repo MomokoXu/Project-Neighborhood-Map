@@ -128,6 +128,11 @@ var catListView = {
     }
   }
 };
+
+var adminView = {
+
+};
+
 octopus.init();
 
 // old implmenetation
