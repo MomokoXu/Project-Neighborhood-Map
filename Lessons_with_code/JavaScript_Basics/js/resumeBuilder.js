@@ -1,7 +1,7 @@
 /*
 This is empty on purpose! Your code to build the resume will go here.
  */
- /*
+ /* Test for Javascript
 var name = "Momoko Xu";
 var awesomeThoughts = "I am " + name + " and I am AWESOME!";
 $("#main").append(awesomeThoughts);
