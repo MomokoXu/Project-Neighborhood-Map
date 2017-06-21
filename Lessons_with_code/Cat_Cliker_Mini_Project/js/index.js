@@ -4,33 +4,36 @@ var model = {
   listCats: [
     {
       name: "Kitten1",
-      http: "https://static1.squarespace.com/static/54e8ba93e4b07c3f655b452e/t/56c2a04520c64707756f4267/1493764650017/",
+      imgSrc: "https://static1.squarespace.com/static/54e8ba93e4b07c3f655b452e/t/56c2a04520c64707756f4267/1493764650017/",
       id: 0,
       clicks: 0
     },
     {
       name: "Kitten2",
-      http: "https://www.pets4homes.co.uk/images/articles/1646/large/kitten-emergencies-signs-to-look-out-for-537479947ec1c.jpg",
+      imgSrc: "https://www.pets4homes.co.uk/images/articles/1646/large/kitten-emergencies-signs-to-look-out-for-537479947ec1c.jpg",
       id: 1,
       clicks: 0
     },
 
-    {name: "Kitten3",
-    http:"https://pbs.twimg.com/profile_images/562466745340817408/_nIu8KHX.jpeg",
-     id: 2,
-    clicks: 0
+    {
+      name: "Kitten3",
+      imgSrc:"https://pbs.twimg.com/profile_images/562466745340817408/_nIu8KHX.jpeg",
+      id: 2,
+      clicks: 0
     },
 
-    {name: "Kitten4",
-    http:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
-     id: 3,
-    clicks: 0
+    {
+      name: "Kitten4",
+      imgSrc:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
+      id: 3,
+      clicks: 0
     },
 
-    {name: "Kitten5",
-    http:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
-     id: 4,
-    clicks: 0
+    {
+      name: "Kitten5",
+      imgSrc:"https://s-media-cache-ak0.pinimg.com/736x/a0/1b/59/a01b5920f688f91677527fd270c6a7e3.jpg",
+      id: 4,
+      clicks: 0
     }
   ]
 };
@@ -43,6 +46,7 @@ var octopus = {
     // tell our views to initialize
     catListView.init();
     catView.init();
+    adminView.init();
   },
 
   getCurCat: function() {
@@ -73,7 +77,7 @@ var catView = {
     this.catImageElem = document.getElementById('cat-img');
     this.countElem = document.getElementById('cat-count');
     // on click, increment the current cat's counter
-    this.catImageElem.addEventListener('click', function(){
+    this.catImageElem.addEventListener('click', function() {
         octopus.incrementCounter();
     });
 
@@ -85,7 +89,7 @@ var catView = {
     var curCat = octopus.getCurCat();
     this.catNameElem.textContent = curCat.name;
     this.countElem.textContent = curCat.clicks;
-    this.catImageElem.src = curCat.http;
+    this.catImageElem.src = curCat.imgSrc;
   }
 };
 
@@ -129,9 +133,64 @@ var catListView = {
   }
 };
 
+
 var adminView = {
 
-};
+    init: function() {
+        this.adminElem = document.getElementById('admin-btn');
+        this.adminForm = document.getElementById('admin-form');
+        this.saveBtn = document.getElementById('save');
+        this.cancelBtn = document.getElementById('cancel');
+
+        this.inputName = document.getElementById('name');
+        this.inputSrc = document.getElementById('imgSrc');
+        this.inputClicks = document.getElementById('clicks');
+        this.render();
+    },
+
+    render: function() {
+      var curView = this;
+
+      this.adminElem.addEventListener('click', function() {
+        curView.showForm();
+      });
+
+      this.saveBtn.click(function(){
+        curView.saveForm();
+      });
+
+      this.cancelBtn.click(function(){
+        curView.hideForm();
+      });
+    },
+
+    showForm: function() {
+      var cat = octopus.getCurCat();
+      this.adminForm.style.display = "block";
+      this.inputName.textContent = cat.name;
+      this.inputClicks.textContent = cat.clicks;
+      this.inputSrc.src = cat.imgSrc;
+    },
+
+    hideForm: function() {
+      this.inputName.textContent = '';
+      this.inputClicks.textContent = '';
+      this.inputSrc.src = '';
+    },
+
+    saveForm: function() {
+      var name = this.inputName;
+      var imgSrc = this.inputSrc;
+      var clicks = this.clicks;
+      this.hideForm();
+      var cat = octopus.getCurCat();
+      cat.name = name;
+      cat.imgSrc = imgSrc;
+      cat.clicks = clicks;
+      octopus.setCurCat(cat);
+    }
+}
+
 
 octopus.init();
 
