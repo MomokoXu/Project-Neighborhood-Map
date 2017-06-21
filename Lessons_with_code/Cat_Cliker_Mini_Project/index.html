@@ -162,16 +162,17 @@
     <div class="row padding-top padding-bottom">
       <div class="col-md-4"></div>
       <div class="col-md-4">
-        <h3 data-bind="text: name"></h3>
-        <div data-bind="text: clicks"></div>
-        <div data-bind="text: level"></div>
-        <img src="" alt="cute cat" data-bind="click: incrementCounter, attr: {src: http}">
+        <h2 data-bind="text: currentCat().name"></h2>
+        <div data-bind="text: currentCat().clicks"></div>
+        <div data-bind="text: currentCat().level"></div>
+        <img src="" alt="cute cat" data-bind="click: incrementCounter, attr: {src: currentCat().imgSrc}">
       </div>
     </div>
     <div class="row padding-top padding-bottom">
       <div class="col-md-4"></div>
       <div class="col-md-4">
-        <ul data-bind="foreach: nickNames">
+        <h2> Nicknames:</h2>
+        <ul data-bind="foreach: currentCat().nickNames">
           <li>
             <p data-bind="text: $data.name"></p>
           </li>
