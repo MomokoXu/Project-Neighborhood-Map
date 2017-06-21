@@ -52,7 +52,47 @@ $("#header").append(formattedLibs);
 $("#header").append(formattedTools);
 $("#header").append(formattedOSs);
 
+var work = {};
+work.position = "Software Developer";
+work.city = "Mountian View";
 
-//$("#header").append();
-//$("#header").append();
+var education = {};
+education["school"] = "Columbia University";
+education["year"] = "2015 Fall";
+education["city"] = "New York";
+education["degree"] = "Master"
+
+var formattedTitle = HTMLworkTitle.replace("%data%", work.position);
+var formattedJobCity = HTMLworkLocation.replace("%data%", work.city);
+$("#workExperience").append(HTMLworkStart);
+$("#workExperience").append(formattedTitle);
+$("#workExperience").append(formattedJobCity);
+
+var formattedschoolName = HTMLschoolName.replace("%data%", education.school);
+var formattedschoolDegree = HTMLschoolDegree.replace("%data%", education.degree);
+var formattedschoolDates = HTMLschoolDates.replace("%data%", education.year);
+var formattedschoolCity = HTMLschoolLocation.replace("%data%", education.city);
+$("#education").append(HTMLschoolStart);
+$("#education").append(formattedschoolName);
+$("#education").append(formattedschoolDegree);
+$("#education").append(formattedschoolDates);
+$("#education").append(formattedschoolCity);
+
+var educationJSON = {
+	"schools": [
+		{
+			"name": "Columbia University",
+			"city": "New York",
+			"degree": "Msc",
+			"major": ["EE", "CS"]
+		},
+
+		{
+			"name": "University of Oxford",
+			"city": "Oxford",
+			"degree": "Msc",
+			"major": ["Biomedical Engineering"]
+		}
+	]
+};
 
