@@ -13,6 +13,11 @@ var ViewModel = function() {
       this.incrementCounter = function() {
       	this.clicks(this.clicks() + 1);
       };
+
+      this.nickNames = ko.observableArray([
+      	{name: "Cute kitten"},
+      	{name: "Soft kitten"},
+      ]);
 }
 
 ko.applyBindings(new ViewModel());
