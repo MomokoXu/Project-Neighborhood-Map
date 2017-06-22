@@ -157,19 +157,26 @@
     <div class="row padding-top padding-bottom">
       <div class="col-md-2"></div>
       <div class="col-md-10"></div>
-    <div>
+    </div>
+
+    <div class="row padding-top padding-bottom" data-bind="foreach: catList">
+      <div class="col-md-2">
+        <h2 data-bind="text: name, click: $parent.setCat"></h2>
+      </div>
+    </div>
 
     <div class="row padding-top padding-bottom">
-      <div class="col-md-4"></div>
+      <div class="col-md-3"></div>
       <div class="col-md-4" data-bind="with: currentCat">
         <h2 data-bind="text: name"></h2>
         <div data-bind="text: clicks"></div>
         <div data-bind="text: level"></div>
         <img src="" alt="cute cat" data-bind="click: $parent.incrementCounter, attr: {src: imgSrc}">
       </div>
+      <div class="col-md-4"></div>
     </div>
     <div class="row padding-top padding-bottom">
-      <div class="col-md-4"></div>
+      <div class="col-md-3"></div>
       <div class="col-md-4" data-bind="with: currentCat">
         <h2> Nicknames:</h2>
         <ul data-bind="foreach: nickNames">
@@ -178,6 +185,7 @@
           </li>
         </ul>
       </div>
+      <div class="col-md-4"></div>
     </div>
   </body>
   <script type="text/javascript" src="js/lib/knockout-3.4.2.js"></script>
