@@ -10,13 +10,54 @@
         margin: 0;
         padding: 0;
       }
-      #map {
+      .container {
         height: 100%;
+        position: relative;
+      }
+      input {
+        font-size: 12px;
+      }
+      h1 {
+        color: #525454;
+        font-size: 22px;
+        margin: 0 0 10px 0;
+        text-align: center;
+      }
+      #hide-listings,
+      #show-listings {
+        width: 48%;
+      }
+      #map {
+        bottom:0px;
+        height: 100%;
+        left: 362px;
+        position: absolute;
+        right: 0px;
+      }
+      .options-box {
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 3px;
+        height: 100%;
+        line-height: 35px;
+        padding: 10px 10px 30px 10px;
+        text-align: left;
+        width: 340px;
       }
     </style>
   </head>
+
   <body>
-    <div id="map"></div>
+    <div class="container">
+      <div class="options-box">
+        <h1>Find Your New NYC Home</h1>
+        <div>
+          <input id="show-listings" type="button" value="Show Listings">
+          <input id="hide-listings" type="button" value="Hide Listings">
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
     <script>
       var map;
       // Create a new blank array for all the listing markers. (multilocation test)
@@ -60,7 +101,7 @@
           var title = locations[i].title;
           // Create a marker per location, and put into markers array.
           var marker = new google.maps.Marker({
-            map: map,
+            //map: map,
             position: position,
             title: title,
             animation: google.maps.Animation.DROP,
@@ -72,10 +113,15 @@
           marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
           });
-          bounds.extend(markers[i].position);
+          //bounds.extend(markers[i].position); moved to showListings()
         }
+
         // Extend the boundaries of the map for each marker
-        map.fitBounds(bounds);
+        // map.fitBounds(bounds); moved to showListings()
+
+        // add show-hide buttons
+        document.getElementById('show-listings').addEventListener('click', showListings);
+        document.getElementById('hide-listings').addEventListener('click', hideListings);
       }
 
       // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -93,6 +139,24 @@
           });
         }
       }
+
+      // This function will loop through the markers array and display them all.
+      function showListings() {
+        var bounds = new google.maps.LatLngBounds();
+        // Extend the boundaries of the map for each marker and display the marker
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+          bounds.extend(markers[i].position);
+        }
+        map.fitBounds(bounds);
+      }
+      // This function will loop through the listings and hide them all.
+      function hideListings() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
+
     </script>
 
     <script async defer
