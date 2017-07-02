@@ -9,29 +9,35 @@
         margin: 0;
         padding: 0;
       }
+
       .container {
         height: 100%;
         position: relative;
       }
+
       input {
         font-size: 12px;
       }
+
       h1 {
         color: #525454;
         font-size: 22px;
         margin: 0 0 10px 0;
         text-align: center;
       }
+
       #hide-listings,
       #show-listings {
         width: 48%;
       }
+
       hr {
         background: #D0D7D9;
         height: 1px;
         margin: 20px 0 20px 0;
         border: none;
       }
+
       #map {
         bottom:0px;
         height: 100%;
@@ -39,6 +45,7 @@
         position: absolute;
         right: 0px;
       }
+
       .options-box {
         background: #fff;
         border: 1px solid #999;
@@ -49,25 +56,31 @@
         text-align: left;
         width: 340px;
       }
+
       #pano {
         width: 200px;
         height: 200px;
       }
+
       .text {
         font-size: 12px;
       }
+
       #toggle-drawing {
         width: 27%;
         position: relative;
         margin-left: 10px;
       }
+
       #zoom-to-area-text {
         position: relative;
         width: 70%;
       }
+
       #zoom-to-area {
         width: 24%;
       }
+
       #floating-panel {
         position: absolute;
         top: 10px;
@@ -82,6 +95,8 @@
         line-height: 30px;
         padding-left: 10px;
       }
+
+      #places-search,
       #search-within-time-text {
         width: 84%;
       }
@@ -148,11 +163,9 @@
       var markers = [];
       // This global polygon variable is to ensure only ONE polygon is rendered.
       var polygon = null;
-
       // Create placemarkers array to use in multiple functions to have control
       // over the number of places that show.
       var placeMarkers = [];
-
       function initMap() {
         // Create a styles array to use with the map.
         var styles = [
@@ -228,22 +241,19 @@
           styles: styles,
           mapTypeControl: false
         });
-
         // This autocomplete is for use in the search within time entry box.
         var timeAutocomplete = new google.maps.places.Autocomplete(
             document.getElementById('search-within-time-text'));
         // This autocomplete is for use in the geocoder entry box.
         var zoomAutocomplete = new google.maps.places.Autocomplete(
             document.getElementById('zoom-to-area-text'));
-        //Bias the boundaries within the map for the zoom to area text.
+        // Bias the boundaries within the map for the zoom to area text.
         zoomAutocomplete.bindTo('bounds', map);
-
         // Create a searchbox in order to execute a places search
         var searchBox = new google.maps.places.SearchBox(
             document.getElementById('places-search'));
         // Bias the searchbox to within the bounds of the map.
         searchBox.setBounds(map.getBounds());
-
         // These are the real estate listings that will be shown to the user.
         // Normally we'd have these in a database instead.
         var locations = [
@@ -300,40 +310,26 @@
           });
         }
         document.getElementById('show-listings').addEventListener('click', showListings);
-
-        document.getElementById('hide-listings').addEventListener('click', hideMarkers(markers));
+        document.getElementById('hide-listings').addEventListener('click', function() {
+          hideMarkers(markers);
+        });
         document.getElementById('toggle-drawing').addEventListener('click', function() {
           toggleDrawing(drawingManager);
         });
-
         document.getElementById('zoom-to-area').addEventListener('click', function() {
           zoomToArea();
         });
-
-        /*
-        var geocoder = new google.maps.Geocoder();
-        document.getElementById('submit').addEventListener('click', function() {
-          geocodeAddress(geocoder, map);
-        });
-        */
-
         document.getElementById('search-within-time').addEventListener('click', function() {
           searchWithinTime();
         });
-
-
         // Listen for the event fired when the user selects a prediction from the
         // picklist and retrieve more details for that place.
         searchBox.addListener('places_changed', function() {
           searchBoxPlaces(this);
         });
-
-
         // Listen for the event fired when the user selects a prediction and clicks
         // "go" more details for that place.
         document.getElementById('go-places').addEventListener('click', textSearchPlaces);
-
-
         // Add an event listener so that the polygon is captured,  call the
         // searchWithinPolygon function. This will show the markers in the polygon,
         // and hide any outside of it.
@@ -350,7 +346,7 @@
           polygon = event.overlay;
           polygon.setEditable(true);
           // Searching within the polygon.
-          searchWithinPolygon();
+          searchWithinPolygon(polygon);
           // Make sure the search is re-done if the poly is changed.
           polygon.getPath().addListener('set_at', searchWithinPolygon);
           polygon.getPath().addListener('insert_at', searchWithinPolygon);
@@ -454,7 +450,6 @@
           }
         }
       }
-
       // This function takes the input value in the find nearby area text input
       // locates it, and then zooms into that area. This is so that the user can
       // show all listings, then decide to focus on one area of the map.
@@ -481,24 +476,8 @@
                     ' specific place.');
               }
             });
-        }
-      }
-
-      function geocodeAddress(geocoder, resultsMap) {
-        var address = document.getElementById('address').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === google.maps.GeocoderStatus.OK) {
-            resultsMap.setCenter(results[0].geometry.location);
-            //TODO: Insert code here to take the first result's formatted address, and LOCATION.
-            document.getElementById('firstComponent').innerHTML="The Formatted Address is:" + results[0].formatted_address ; // PUT STUFF HERE
-            document.getElementById('secondComponent').innerHTML="The Location is"
-            + results[0].geometry.location; // PUT STUFF HERE
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
           }
-        });
-      }
-
+        }
       // This function allows the user to input a desired travel time, in
       // minutes, and a travel mode, and a location - and only show the listings
       // that are within that travel time (via that travel mode) of the location
@@ -567,8 +546,8 @@
                 // distance and duration
                 var infowindow = new google.maps.InfoWindow({
                   content: durationText + ' away, ' + distanceText +
-                  '<div><input type=\"button\" value=\"View Route\" onclick =' +
-                  '\"displayDirections(&quot;' + origins[i] + '&quot;);\"></input></div>'
+                    '<div><input type=\"button\" value=\"View Route\" onclick =' +
+                    '\"displayDirections(&quot;' + origins[i] + '&quot;);\"></input></div>'
                 });
                 infowindow.open(map, markers[i]);
                 // Put this in so that this small window closes if the user clicks
@@ -585,7 +564,6 @@
           window.alert('We could not find any locations within that distance!');
         }
       }
-
       // This function is in response to the user selecting "show route" on one
       // of the markers within the calculated distance. This will display the route
       // on the map.
@@ -618,16 +596,16 @@
           }
         });
       }
-
       // This function fires when the user selects a searchbox picklist item.
       // It will do a nearby search using the selected query string or place.
       function searchBoxPlaces(searchBox) {
         hideMarkers(placeMarkers);
         var places = searchBox.getPlaces();
-        // For each place, get the icon, name and location.
-        createMarkersForPlaces(places);
         if (places.length == 0) {
           window.alert('We did not find any places matching that search!');
+        } else {
+        // For each place, get the icon, name and location.
+          createMarkersForPlaces(places);
         }
       }
       // This function firest when the user select "go" on the places search.
@@ -663,11 +641,18 @@
             icon: icon,
             title: place.name,
             position: place.geometry.location,
-            id: place.id
+            id: place.place_id
           });
+          // Create a single infowindow to be used with the place details information
+          // so that only one is open at once.
+          var placeInfoWindow = new google.maps.InfoWindow();
           // If a marker is clicked, do a place details search on it in the next function.
           marker.addListener('click', function() {
-          getPlacesDetails(this, place);
+            if (placeInfoWindow.marker == this) {
+              console.log("This infowindow already is on this marker!");
+            } else {
+              getPlacesDetails(this, placeInfoWindow);
+            }
           });
           placeMarkers.push(marker);
           if (place.geometry.viewport) {
@@ -679,6 +664,51 @@
         }
         map.fitBounds(bounds);
       }
+    // This is the PLACE DETAILS search - it's the most detailed so it's only
+    // executed when a marker is selected, indicating the user wants more
+    // details about that place.
+    function getPlacesDetails(marker, infowindow) {
+      var service = new google.maps.places.PlacesService(map);
+      service.getDetails({
+        placeId: marker.id
+      }, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          // Set the marker property on this infowindow so it isn't created again.
+          infowindow.marker = marker;
+          var innerHTML = '<div>';
+          if (place.name) {
+            innerHTML += '<strong>' + place.name + '</strong>';
+          }
+          if (place.formatted_address) {
+            innerHTML += '<br>' + place.formatted_address;
+          }
+          if (place.formatted_phone_number) {
+            innerHTML += '<br>' + place.formatted_phone_number;
+          }
+          if (place.opening_hours) {
+            innerHTML += '<br><br><strong>Hours:</strong><br>' +
+                place.opening_hours.weekday_text[0] + '<br>' +
+                place.opening_hours.weekday_text[1] + '<br>' +
+                place.opening_hours.weekday_text[2] + '<br>' +
+                place.opening_hours.weekday_text[3] + '<br>' +
+                place.opening_hours.weekday_text[4] + '<br>' +
+                place.opening_hours.weekday_text[5] + '<br>' +
+                place.opening_hours.weekday_text[6];
+          }
+          if (place.photos) {
+            innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
+                {maxHeight: 100, maxWidth: 200}) + '">';
+          }
+          innerHTML += '</div>';
+          infowindow.setContent(innerHTML);
+          infowindow.open(map, marker);
+          // Make sure the marker property is cleared if the infowindow is closed.
+          infowindow.addListener('closeclick', function() {
+            infowindow.marker = null;
+          });
+        }
+      });
+    }
     </script>
 
     <script async defer
