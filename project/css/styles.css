@@ -17,7 +17,7 @@ input {
 
 h1 {
   color: #525454;
-  font-size: 22px;
+  font-size: 18px;
   margin: 0 0 10px 0;
   text-align: center;
 }
@@ -35,7 +35,8 @@ hr {
 }
 
 #map {
-  bottom:0px;
+  top:10px;
+  bottom:10px;
   height: 100%;
   left: 362px;
   position: absolute;
@@ -51,6 +52,9 @@ hr {
   padding: 10px 10px 30px 10px;
   text-align: left;
   width: 340px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 #pano {
