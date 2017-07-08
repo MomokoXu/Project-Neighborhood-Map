@@ -12,9 +12,24 @@ function BookStore(data) {
 
   self.largeInfowindow = new google.maps.InfoWindow();
   self.populateInfoWindow = populateInfoWindow(self.marker, self.largeInfowindow);
-
 }
 
+
+var locations = [
+  {title: "Browser Books", location: {lat: 37.7896729, lng: -122.4342177}},
+  {title: "The Booksmith", location: {lat: 37.7698021, lng: -122.4494117}},
+  {title: "Kepler's Books", location: {lat: 37.453569, lng: -122.182167}},
+  {title: "Feldman's Books", location: {lat: 37.454151, lng: -122.1838146}},
+  {title: "Bell's Books", location: {lat: 37.44405680000001, lng: -122.1622352}},
+  {title: "B Street Books", location: {lat: 37.565544, lng: -122.322034}},
+  {title: "Recycle Bookstore", location: {lat: 37.331286, lng: -121.911065}},
+  {title: "Moe's Books", location: {lat: 37.865464, lng: -122.258804}},
+  {title: "Builders Booksource", location: {lat:  37.86948050000001, lng: -122.3003344}},
+  {title: "Mrs Dalloway's", location: {lat: 37.8581708, lng: -122.25329}},
+  {title: "Aardvark Books", location: {lat: 37.7670568, lng: -122.4285774}},
+  {title: "Green Apple Books", location: {lat: 37.78304500000001, lng: -122.464715}},
+  {title: "City Lights Booksellers & Publishers", location: {lat: 37.7976073, lng: -122.4065603}}
+];
 
 // Create a new blank array for all the listing markers.
 var markers = [];
