@@ -316,8 +316,8 @@
                 ' specific place.');
           }
         });
-      }
     }
+  }
   // This function allows the user to input a desired travel time, in
   // minutes, and a travel mode, and a location - and only show the listings
   // that are within that travel time (via that travel mode) of the location
