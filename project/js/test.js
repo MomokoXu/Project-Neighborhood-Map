@@ -1,3 +1,5 @@
+var map;
+// Location data
 var locations = [
   {title: "The Booksmith", lat: 37.7698021, lng: -122.4494117},
   {title: "Kepler's Books", lat: 37.453569, lng: -122.182167},
@@ -14,8 +16,8 @@ var locations = [
   {title: "Browser Books", lat: 37.7896729, lng: -122.4342177},
 ];
 
-
-var BookStore = function(data) {
+// Model
+function Bookstore(data) {
   var self = this;
   self.title = data.title;
   self.lat = data.lat;
@@ -27,6 +29,7 @@ var BookStore = function(data) {
   // mouses over the marker.
   self.highlightedIcon = makeMarkerIcon('FFFF24');
 
+  // store marker
   self.marker = new google.maps.Marker({
     position: {lat: self.lat, lng: self.lng},
     title: self.title,
@@ -34,13 +37,90 @@ var BookStore = function(data) {
     icon: self.defaultIcon,
   });
 
+  // store infowindow
   self.largeInfowindow = new google.maps.InfoWindow();
-  // Create an onclick event to open the large infowindow at each marker.
-  self.marker.addListener('click', function() {
-    populateInfoWindow(self.marker, self.largeInfowindow);
-  });
+  self.showInfoWindow = function() {
+    if (!self.largeInfowindow.getContent()) {
+      var bounds = map.getBounds();
+      var placesService = new google.maps.places.PlacesService(map);
+      placesService.textSearch({
+        query: self.title,
+        bounds: bounds
+      }, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          var service = new google.maps.places.PlacesService(map);
+          service.getDetails({
+            placeId: results[0].place_id
+          }, function(place, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              var innerHTML = '<div>';
+              if (place.name) {
+                innerHTML += '<strong>' + place.name + '</strong>';
+              }
+              if (place.formatted_address) {
+                innerHTML += '<br>' + place.formatted_address;
+              }
+              if (place.formatted_phone_number) {
+                innerHTML += '<br>' + place.formatted_phone_number;
+              }
+              if (place.opening_hours) {
+                innerHTML += '<br><br><strong>Hours:</strong><br>' +
+                    place.opening_hours.weekday_text[0] + '<br>' +
+                    place.opening_hours.weekday_text[1] + '<br>' +
+                    place.opening_hours.weekday_text[2] + '<br>' +
+                    place.opening_hours.weekday_text[3] + '<br>' +
+                    place.opening_hours.weekday_text[4] + '<br>' +
+                    place.opening_hours.weekday_text[5] + '<br>' +
+                    place.opening_hours.weekday_text[6];
+              }
+              if (place.photos) {
+                innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
+                    {maxHeight: 100, maxWidth: 200}) + '">';
+              }
+              innerHTML += '</div>';
+              self.largeInfowindow.setContent(innerHTML);
+            }
+          });
+        }
+      });
+    }
+    self.largeInfowindow.open(map, self.marker);
+  }
 
-  //self.placeDetailwindow = new google.maps.InfoWindow();
+  // store object status enable and disable:
+  // make sure only one store is active at one time
+  self.enable = function() {
+    // If current active store is not self, disable it first
+    if (Bookstore.prototype.enable && Bookstore.prototype.enable !== self) {
+      Bookstore.prototype.enable.disable();
+    }
+    // set current active store to be self
+    Bookstore.prototype.enable = self;
+    // center and accent current store and show its inforwindow
+    self.marker.setMap(map);
+    map.panTo({lat: self.lat, lng: self.lng});
+    self.marker.setAnimation(google.maps.Animation.BOUNCE);
+    self.marker.setIcon(self.highlightedIcon);
+    self.showInfoWindow();
+  }
+  self.disable = function() {
+    Bookstore.prototype.enable = null;
+    self.marker.setAnimation(null);
+    self.marker.setIcon(self.defaultIcon);
+    self.largeInfowindow.close()
+  }
+
+  // Twp event listeners-one for open inforwindow , one for close
+  self.marker.addListener('click', function() {
+    if (Bookstore.prototype.enable === self) {
+      self.disable();
+    } else {
+      self.enable();
+    }
+  });
+  self.marker.addListener('closeclick', function() {
+    self.disable();
+  });
 
   // Two event listeners - one for mouseover, one for mouseout,
   // to change the colors back and forth.
@@ -50,16 +130,22 @@ var BookStore = function(data) {
   self.marker.addListener('mouseout', function() {
     self.marker.setIcon(self.defaultIcon);
   });
+
+  // Event for close infowindow
+  self.largeInfowindow.addListener('closeclick', function() {
+    self.disable();
+  });
 }
+// Globel variable to store current active store
+Bookstore.prototype.enable = null;
 
 
 // List View
-
 var ViewModel = function() {
   var self = this;
   self.stores = ko.observableArray([]);
   locations.forEach(function(store) {
-    self.stores.push(new BookStore(store));
+    self.stores.push(new Bookstore(store));
   });
   self.isVisible = ko.observable(true);
   self.filter = ko.observable('');
@@ -103,17 +189,32 @@ var ViewModel = function() {
   }
 
   self.clickItem = function(store) {
+    store.enable();
+  }
+
+  self.getDirections = function() {
     self.hideMarkers();
-    store.marker.setMap(map);
-    store.marker.setAnimation(google.maps.Animation.BOUNCE);
-    var bounds = map.getBounds();
-    var placesService = new google.maps.places.PlacesService(map);
-    placesService.textSearch({
-      query: store.title,
-      bounds: bounds
-    }, function(results, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        getPlacesDetails(store.marker, store.largeInfowindow, results);
+    var directionsService = new google.maps.DirectionsService;
+    var destinationAddress = document.getElementById('direction').value;
+    var mode = document.getElementById('mode').value;
+    directionsService.route({
+      // The origin is the passed in marker's position.
+      origin: self.marker.position,
+      // The destination is user entered address.
+      destination: destinationAddress,
+      travelMode: google.maps.TravelMode[mode]
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+          map: map,
+          directions: response,
+          draggable: true,
+          polylineOptions: {
+            strokeColor: 'green'
+          }
+        });
+      } else {
+        window.alert('Directions request failed due to ' + status);
       }
     });
   }
@@ -156,6 +257,7 @@ function populateInfoWindow(marker, infowindow) {
     // Clear the infowindow content to give the streetview time to load.
     infowindow.setContent('');
     infowindow.marker = marker;
+    infowindow.marker.setAnimation(null);
     // Make sure the marker property is cleared if the infowindow is closed.
     infowindow.addListener('closeclick', function() {
       infowindow.marker = null;

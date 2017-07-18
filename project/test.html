@@ -37,6 +37,17 @@
                 </li>
             </ul>
         </div>
+        <div>
+          <input id="direction" tyep="text" placeholder="Enter an address">
+          <span class="text"> By </span>
+          <select id="mode">
+            <option value="DRIVING">drive</option>
+            <option value="WALKING">walk</option>
+            <option value="BICYCLING">bike</option>
+            <option value="TRANSIT">transit ride</option>
+          </select>
+          <input id="search" data-bind="click: getDirections" type="button" value="Go">
+        </div>
       </div>
       <div id="map"></div>
     </div>
