@@ -54,7 +54,7 @@ function loadData() {
         dataType: "jsonp",
         // jsonp: "callback",
         success: function(response) {
-            var articleList = response[1];
+            var articleList = response[2];
 
             for (var i = 0; i < articleList.length; i++) {
                 articleStr = articleList[i];
