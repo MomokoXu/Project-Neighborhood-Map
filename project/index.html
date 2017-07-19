@@ -5,57 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/jquery-3.2.0.min.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="options-box">
         <h1>Independent Bookstores In Bay Area</h1>
+        <div class="line-divider"></div>
         <div>
-          <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
-          <hr>
-          <span class="text"> Draw a shape to search within it for bookstores!</span>
-          <input id="toggle-drawing"  type="button" value="Drawing Tools">
+          <input id="show-listings" type="button" value="Show Listings" data-bind="click: showListings">
+          <input id="hide-listings" type="button" value="Hide Listings" data-bind="click: hideMarkers">
         </div>
-        <hr>
-        <div>
-          <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
-          <input id="zoom-to-area" type="button" value="Zoom">
+        <div class="line-divider-big"></div>
+        <h2>Search For A Bookstore:</h2>
+        <input id="filter" placeholder="Type here to filter..." data-bind="textInput: filter">
+        <div id="listview">
+            <ul class="scrollbar" data-bind="foreach: filteredResults">
+                <div class="store-item">
+                    <a href="#" data-bind="click: $root.clickItem">
+                        <span class="store-name" data-bind="text: title"></span>
+                    </a>
+                </div>
+            </ul>
         </div>
-        <hr>
+        <div class="line-divider-big"></div>
         <div>
-          <span class="text"> Within </span>
-          <select id="max-duration">
-            <option value="10">10 min</option>
-            <option value="15">15 min</option>
-            <option value="30">30 min</option>
-            <option value="60">1 hour</option>
-          </select>
+          <h2>Show Directions</h2>
+          <input id="start" tyep="text" placeholder="Enter your location">
+          <input id="end" tyep="text" placeholder="Enter a bookstore">
+          <div class="line-divider"></div>
+          <span class="text"> Choose Travel Mode: </span>
           <select id="mode">
             <option value="DRIVING">drive</option>
             <option value="WALKING">walk</option>
             <option value="BICYCLING">bike</option>
             <option value="TRANSIT">transit ride</option>
           </select>
-          <span class="text">of</span>
-          <input id="search-within-time-text" type="text" placeholder="Ex: Aardvark Books, CA">
-          <input id="search-within-time" type="button" value="Go">
-        </div>
-        <hr>
-        <div>
-          <span class="text">Search for nearby places</span>
-          <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
-          <input id="go-places" type="button" value="Go">
+          <div class="line-divider"></div>
+          <input id="search" data-bind="click: getDirections" type="button" value="Go">
+          <input id="reset" data-bind="click: reset" type="button" value="Reset">
         </div>
       </div>
       <div id="map"></div>
     </div>
-    <script src="js/app.js"></script>
-
+    <script src="js/test.js"></script>
+    <script type="text/javascript" src="js/lib/knockout-3.4.2.js"></script>
     <script async defer
         src=
         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAO9YH11DcnrSjSvJ_Urzg4kX_hOptxNzA&v=3&callback=initMap">
     </script>
-
   </body>
 </html>
