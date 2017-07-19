@@ -11,20 +11,58 @@ body {
   position: relative;
 }
 
+.line-divider {
+  margin: 15px;
+}
+
+.line-divider-big {
+  margin-top: 100px;
+}
+
+.scrollbar {
+  height: 200px;
+  width: 280px;
+  background: #F5F5F5;
+  overflow-y: scroll;
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+.store-name {
+  min-height: 450px;
+}
+
+#listview {
+  text-align: left;
+  width: 500px;
+  margin: auto;
+}
+
 input {
   font-size: 12px;
 }
 
 h1 {
   color: #525454;
-  font-size: 18px;
+  font-size: 24px;
   margin: 0 0 10px 0;
   text-align: center;
 }
 
+h2 {
+  color: #525454;
+  font-size: 18px;
+  margin: 0 0 10px 0;
+  text-align: left
+}
+
 #hide-listings,
-#show-listings {
+#show-listings,#search,#reset {
   width: 48%;
+}
+
+.store-name:hover {
+  background-color: yellow;
 }
 
 hr {
@@ -57,46 +95,7 @@ hr {
   margin-right: 10px;
 }
 
-#pano {
-  width: 200px;
-  height: 200px;
-}
 
 .text {
   font-size: 12px;
-}
-
-#toggle-drawing {
-  width: 27%;
-  position: relative;
-  margin-left: 10px;
-}
-
-#zoom-to-area-text {
-  position: relative;
-  width: 70%;
-}
-
-#zoom-to-area {
-  width: 24%;
-}
-
-#floating-panel {
-  position: absolute;
-  top: 10px;
-  left: 65%;
-  z-index: 5;
-  height:90%;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #999;
-  text-align: center;
-  font-family: 'Roboto','sans-serif';
-  line-height: 30px;
-  padding-left: 10px;
-}
-
-#places-search,
-#search-within-time-text {
-  width: 84%;
 }

@@ -1,19 +1,20 @@
 var map;
+
 // Location data
 var locations = [
-  {title: "The Booksmith", lat: 37.7698021, lng: -122.4494117},
-  {title: "Kepler's Books", lat: 37.453569, lng: -122.182167},
-  {title: "Feldman's Books", lat: 37.454151, lng: -122.1838146},
-  {title: "Bell's Books", lat: 37.44405680000001, lng: -122.1622352},
-  {title: "B Street Books", lat: 37.565544, lng: -122.322034},
-  {title: "Recycle Bookstore", lat: 37.331286, lng: -121.911065},
-  {title: "Moe's Books", lat: 37.865464, lng: -122.258804},
-  {title: "Builders Booksource", lat:  37.86948050000001, lng: -122.3003344},
-  {title: "Mrs Dalloway's", lat: 37.8581708, lng: -122.25329},
-  {title: "Aardvark Books", lat: 37.7670568, lng: -122.4285774},
-  {title: "Green Apple Books", lat: 37.78304500000001, lng: -122.464715},
-  {title: "City Lights Booksellers & Publishers", lat: 37.7976073, lng: -122.4065603},
-  {title: "Browser Books", lat: 37.7896729, lng: -122.4342177},
+  {title: "The Booksmith", lat: 37.7698021, lng: -122.4494117, wiki:""},
+  {title: "Kepler's Books", lat: 37.453569, lng: -122.182167, wiki:""},
+  {title: "Feldman's Books", lat: 37.454151, lng: -122.1838146, wiki:""},
+  {title: "Bell's Books", lat: 37.44405680000001, lng: -122.1622352, wiki:""},
+  {title: "B Street Books", lat: 37.565544, lng: -122.322034, wiki:""},
+  {title: "Recycle Bookstore", lat: 37.331286, lng: -121.911065, wiki:""},
+  {title: "Moe's Books", lat: 37.865464, lng: -122.258804, wiki:""},
+  {title: "Builders Booksource", lat:  37.86948050000001, lng: -122.3003344, wiki:""},
+  {title: "Mrs Dalloway's", lat: 37.8581708, lng: -122.25329, wiki:""},
+  {title: "Aardvark Books", lat: 37.7670568, lng: -122.4285774, wiki:""},
+  {title: "Green Apple Books", lat: 37.78304500000001, lng: -122.464715, wiki:""},
+  {title: "City Lights Booksellers & Publishers", lat: 37.7976073, lng: -122.4065603, wiki:""},
+  {title: "Browser Books", lat: 37.7896729, lng: -122.4342177, wiki:""},
 ];
 
 // Model
@@ -22,12 +23,13 @@ function Bookstore(data) {
   self.title = data.title;
   self.lat = data.lat;
   self.lng = data.lng;
+  self.wiki = data.wiki;
 
   // Style the markers a bit. This will be our listing marker icon.
-  self.defaultIcon = makeMarkerIcon('0091ff');
+  self.defaultIcon = makeMarkerIcon('64d6d1');
   // Create a "highlighted location" marker color for when the user
   // mouses over the marker.
-  self.highlightedIcon = makeMarkerIcon('FFFF24');
+  self.highlightedIcon = makeMarkerIcon('dbf976');
 
   // store marker
   self.marker = new google.maps.Marker({
@@ -77,7 +79,8 @@ function Bookstore(data) {
                 innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
                     {maxHeight: 100, maxWidth: 200}) + '">';
               }
-              innerHTML += '</div>';
+              innerHTML += '</div><br>';
+              innerHTML += '<br><div>' + self.wiki + '</div>';
               self.largeInfowindow.setContent(innerHTML);
             }
           });
@@ -96,7 +99,7 @@ function Bookstore(data) {
     }
     // set current active store to be self
     Bookstore.prototype.enable = self;
-    // center and accent current store and show its inforwindow
+    // center and accent current store and show its infowindow
     self.marker.setMap(map);
     map.panTo({lat: self.lat, lng: self.lng});
     self.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -110,7 +113,7 @@ function Bookstore(data) {
     self.largeInfowindow.close()
   }
 
-  // Twp event listeners-one for open inforwindow , one for close
+  // Twp event listeners- one for open infowindow, one for close
   self.marker.addListener('click', function() {
     if (Bookstore.prototype.enable === self) {
       self.disable();
@@ -136,7 +139,7 @@ function Bookstore(data) {
     self.disable();
   });
 }
-// Globel variable to store current active store
+// Globel variable to record current active store object
 Bookstore.prototype.enable = null;
 
 
@@ -144,10 +147,24 @@ Bookstore.prototype.enable = null;
 var ViewModel = function() {
   var self = this;
   self.stores = ko.observableArray([]);
+
+  // update stores with asyn wiki info
   locations.forEach(function(store) {
+      var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='
+                    + store.title + '&format=json&callback=wikiCallback';
+      // ajax request object
+      $.ajax({
+          url: wikiUrl,
+          // set datatype indicating this is a jsonp request
+          dataType: "jsonp",
+          // jsonp: "callback",
+          success: function(response) {
+              store.wiki = 'https://en.wikipedia.org/wiki/'+ response[2];
+          }
+      });
     self.stores.push(new Bookstore(store));
   });
-  self.isVisible = ko.observable(true);
+
   self.filter = ko.observable('');
 
 
@@ -184,40 +201,48 @@ var ViewModel = function() {
     return lists;
   });
 
-  self.toggleList = function() {
-    self.isVisible(!self.isVisible());
-  }
-
   self.clickItem = function(store) {
     store.enable();
   }
 
+  var directionsDisplay = new google.maps.DirectionsRenderer();
   self.getDirections = function() {
-    self.hideMarkers();
     var directionsService = new google.maps.DirectionsService;
-    var destinationAddress = document.getElementById('direction').value;
+    var originAddress = document.getElementById('start').value;
+    var destinationAddress = document.getElementById('end').value;
     var mode = document.getElementById('mode').value;
-    directionsService.route({
-      // The origin is the passed in marker's position.
-      origin: self.marker.position,
-      // The destination is user entered address.
-      destination: destinationAddress,
-      travelMode: google.maps.TravelMode[mode]
-    }, function(response, status) {
-      if (status === google.maps.DirectionsStatus.OK) {
-        var directionsDisplay = new google.maps.DirectionsRenderer({
-          map: map,
-          directions: response,
-          draggable: true,
-          polylineOptions: {
-            strokeColor: 'green'
-          }
-        });
-      } else {
-        window.alert('Directions request failed due to ' + status);
-      }
+    var storeExist = ko.computed(function() {
+      var ex = false;
+      self.stores().forEach(function(store) {
+        var reg = new RegExp(destinationAddress, 'i');
+        if (store.title.search(reg) !== -1 || store.title.search(destinationAddress) !== -1) {
+          ex = true;
+        };
+      });
+      return ex;
     });
+    if (storeExist() === true) {
+      directionsService.route({
+        // The origin is the passed in marker's position.
+        origin: originAddress,
+        // The destination is user entered address.
+        destination: destinationAddress,
+        travelMode: google.maps.TravelMode[mode]
+      }, function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setMap(map);
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    } else {
+        window.alert('No such bookstore in suggested list');
+    }
   }
+  self.reset = function() {
+    window.location.reload();
+  };
 }
 
 
@@ -245,100 +270,4 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Point(10, 34),
     new google.maps.Size(21,34));
   return markerImage;
-}
-
-
-// This function populates the infowindow when the marker is clicked. We'll only allow
-// one infowindow which will open at the marker that is clicked, and populate based
-// on that markers position.
-function populateInfoWindow(marker, infowindow) {
-  // Check to make sure the infowindow is not already opened on this marker.
-  if (infowindow.marker != marker) {
-    // Clear the infowindow content to give the streetview time to load.
-    infowindow.setContent('');
-    infowindow.marker = marker;
-    infowindow.marker.setAnimation(null);
-    // Make sure the marker property is cleared if the infowindow is closed.
-    infowindow.addListener('closeclick', function() {
-      infowindow.marker = null;
-    });
-    var streetViewService = new google.maps.StreetViewService();
-    var radius = 50;
-    // In case the status is OK, which means the pano was found, compute the
-    // position of the streetview image, then calculate the heading, then get a
-    // panorama from that and set the options
-    function getStreetView(data, status) {
-      if (status == google.maps.StreetViewStatus.OK) {
-        var nearStreetViewLocation = data.location.latLng;
-        var heading = google.maps.geometry.spherical.computeHeading(
-          nearStreetViewLocation, marker.position);
-          infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
-          var panoramaOptions = {
-            position: nearStreetViewLocation,
-            pov: {
-              heading: heading,
-              pitch: 30
-            }
-          };
-        var panorama = new google.maps.StreetViewPanorama(
-          document.getElementById('pano'), panoramaOptions);
-      } else {
-        infowindow.setContent('<div>' + marker.title + '</div>' +
-          '<div>No Street View Found</div>');
-      }
-    }
-    // Use streetview service to get the closest streetview image within
-    // 50 meters of the markers position
-    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-    // Open the infowindow on the correct marker.
-    infowindow.open(map, marker);
-  }
-}
-
-
-// This is the PLACE DETAILS search - it's the most detailed so it's only
-// executed when a marker is selected, indicating the user wants more
-// details about that place.
-function getPlacesDetails(marker, infowindow, places) {
-  var service = new google.maps.places.PlacesService(map);
-  var placeID = places[0].place_id;
-  service.getDetails({
-    placeId: placeID
-  }, function(place, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      // Set the marker property on this infowindow so it isn't created again.
-      infowindow.marker = marker;
-      var innerHTML = '<div>';
-      if (place.name) {
-        innerHTML += '<strong>' + place.name + '</strong>';
-      }
-      if (place.formatted_address) {
-        innerHTML += '<br>' + place.formatted_address;
-      }
-      if (place.formatted_phone_number) {
-        innerHTML += '<br>' + place.formatted_phone_number;
-      }
-      if (place.opening_hours) {
-        innerHTML += '<br><br><strong>Hours:</strong><br>' +
-            place.opening_hours.weekday_text[0] + '<br>' +
-            place.opening_hours.weekday_text[1] + '<br>' +
-            place.opening_hours.weekday_text[2] + '<br>' +
-            place.opening_hours.weekday_text[3] + '<br>' +
-            place.opening_hours.weekday_text[4] + '<br>' +
-            place.opening_hours.weekday_text[5] + '<br>' +
-            place.opening_hours.weekday_text[6];
-      }
-      if (place.photos) {
-        innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
-            {maxHeight: 100, maxWidth: 200}) + '">';
-      }
-      innerHTML += '</div>';
-      infowindow.setContent(innerHTML);
-      infowindow.open(map, marker);
-      // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick', function() {
-        infowindow.marker = null;
-      });
-    }
-  });
 }
