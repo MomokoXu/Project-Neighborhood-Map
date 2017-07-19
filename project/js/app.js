@@ -90,12 +90,10 @@ function Bookstore(data) {
 
               if (self.wiki.length !== 0) {
                 var url = 'https://en.wikipedia.org/wiki/' + self.wiki;
-                innerHTML += '<li><a href="' + url + '">' + self.wiki
-                                      + '</a></li>';
+                innerHTML += '<li><a href="' + url + '">' + self.wiki + '</a></li>';
               } else {
-                innerHTML += '<div>No related Wiki</div>'
+                innerHTML += '<div>No related Wiki</div>';
               }
-
               console.log(self.wiki);
               self.largeInfowindow.setContent(innerHTML);
             }
@@ -104,7 +102,7 @@ function Bookstore(data) {
       });
     }
     self.largeInfowindow.open(map, self.marker);
-  }
+  };
 
   // store object status enable and disable:
   // make sure only one store is active at one time
@@ -121,13 +119,14 @@ function Bookstore(data) {
     self.marker.setAnimation(google.maps.Animation.BOUNCE);
     self.marker.setIcon(self.highlightedIcon);
     self.showInfoWindow();
-  }
+  };
+
   self.disable = function() {
     Bookstore.prototype.enable = null;
     self.marker.setAnimation(null);
     self.marker.setIcon(self.defaultIcon);
-    self.largeInfowindow.close()
-  }
+    self.largeInfowindow.close();
+  };
 
   // Twp event listeners- one for open infowindow, one for close
   self.marker.addListener('click', function() {
@@ -166,8 +165,7 @@ var ViewModel = function() {
 
   // update stores with asyn wiki info
   locations.forEach(function(store) {
-      var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='
-                    + store.title + '&format=json&callback=wikiCallback';
+      var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='+ store.title + '&format=json&callback=wikiCallback';
       // ajax request object
       $.ajax({
           url: wikiUrl,
@@ -220,11 +218,11 @@ var ViewModel = function() {
 
   self.clickItem = function(store) {
     store.enable();
-  }
+  };
 
   var directionsDisplay = new google.maps.DirectionsRenderer();
   self.getDirections = function() {
-    var directionsService = new google.maps.DirectionsService;
+    var directionsService = new google.maps.DirectionsService();
     var originAddress = document.getElementById('start').value;
     var destinationAddress = document.getElementById('end').value;
     var mode = document.getElementById('mode').value;
@@ -234,7 +232,7 @@ var ViewModel = function() {
         var reg = new RegExp(destinationAddress, 'i');
         if (store.title.search(reg) !== -1 || store.title.search(destinationAddress) !== -1) {
           ex = true;
-        };
+        }
       });
       return ex;
     });
@@ -256,11 +254,12 @@ var ViewModel = function() {
     } else {
         window.alert('No such bookstore in suggested list');
     }
-  }
+  };
+
   self.reset = function() {
     window.location.reload();
   };
-}
+};
 
 
 function initMap() {
