@@ -156,8 +156,6 @@ function Bookstore(data) {
 }
 // Globel variable to record current active store object
 Bookstore.prototype.enable = null;
-
-
 // List View
 var ViewModel = function() {
   var self = this;
@@ -181,7 +179,6 @@ var ViewModel = function() {
   });
 
   self.filter = ko.observable('');
-
 
   // This function will loop through the markers array and display them all.
   self.showListings = function() {
