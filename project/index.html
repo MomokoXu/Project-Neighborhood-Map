@@ -31,11 +31,11 @@
         <div class="line-divider-big"></div>
         <div>
           <h2>Show Directions</h2>
-          <input id="start" tyep="text" placeholder="Enter your location">
-          <input id="end" tyep="text" placeholder="Enter a bookstore">
+          <input id="start" type="text" data-bind="textInput: originAddress" placeholder="Enter your location">
+          <input id="end" type="text" data-bind="textInput: destinationAddress" placeholder="Enter a bookstore">
           <div class="line-divider"></div>
           <span class="text"> Choose Travel Mode: </span>
-          <select id="mode">
+          <select id="mode" data-bind="value: mode">
             <option value="DRIVING">drive</option>
             <option value="WALKING">walk</option>
             <option value="BICYCLING">bike</option>
@@ -50,7 +50,7 @@
     </div>
     <script src="js/app.js"></script>
     <script type="text/javascript" src="js/lib/knockout-3.4.2.js"></script>
-    <script async defer
+    <script async defer onerror="iniMapErrorHandler()"
         src=
         "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAO9YH11DcnrSjSvJ_Urzg4kX_hOptxNzA&v=3&callback=initMap">
     </script>
