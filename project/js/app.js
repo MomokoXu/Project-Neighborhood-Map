@@ -96,6 +96,8 @@ function Bookstore(data) {
               }
               console.log(self.wiki);
               self.largeInfowindow.setContent(innerHTML);
+            } else {
+              window.alert("Fail to load information window due to" + status);
             }
           });
         }
@@ -160,10 +162,18 @@ Bookstore.prototype.enable = null;
 var ViewModel = function() {
   var self = this;
   self.stores = ko.observableArray([]);
+  self.originAddress = ko.observable('');
+  self.destinationAddress = ko.observable('');
+  self.mode = ko.observable('');
 
   // update stores with asyn wiki info
   locations.forEach(function(store) {
       var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='+ store.title + '&format=json&callback=wikiCallback';
+      // error handling:
+      // if no response after 8000 miliseconds later, text for error will show up
+      var wikiRequestTimeout = setTimeout(function(){
+          $wikiElem.text("Failed to get wikipedia resources for" + store.title);
+      }, 8000);
       // ajax request object
       $.ajax({
           url: wikiUrl,
@@ -174,6 +184,7 @@ var ViewModel = function() {
               store.wiki = response[1];
               console.log(store.wiki);
               self.stores.push(new Bookstore(store));
+              clearTimeout(wikiRequestTimeout);
           }
       });
   });
@@ -220,14 +231,15 @@ var ViewModel = function() {
   var directionsDisplay = new google.maps.DirectionsRenderer();
   self.getDirections = function() {
     var directionsService = new google.maps.DirectionsService();
-    var originAddress = document.getElementById('start').value;
-    var destinationAddress = document.getElementById('end').value;
-    var mode = document.getElementById('mode').value;
+    //var originAddress = document.getElementById('start').value;
+    //var destinationAddress = document.getElementById('end').value;
+    //var mode = document.getElementById('mode').value;
     var storeExist = ko.computed(function() {
       var ex = false;
       self.stores().forEach(function(store) {
-        var reg = new RegExp(destinationAddress, 'i');
-        if (store.title.search(reg) !== -1 || store.title.search(destinationAddress) !== -1) {
+        var reg = new RegExp(self.destinationAddress(), 'i');
+        if (store.title.search(reg) !== -1 ||
+            store.title.search(self.destinationAddress()) !== -1) {
           ex = true;
         }
       });
@@ -236,10 +248,10 @@ var ViewModel = function() {
     if (storeExist() === true) {
       directionsService.route({
         // The origin is the passed in marker's position.
-        origin: originAddress,
+        origin: self.originAddress(),
         // The destination is user entered address.
-        destination: destinationAddress,
-        travelMode: google.maps.TravelMode[mode]
+        destination: self.destinationAddress(),
+        travelMode: google.maps.TravelMode[self.mode()]
       }, function(response, status) {
         if (status === google.maps.DirectionsStatus.OK) {
           directionsDisplay.setMap(map);
@@ -254,7 +266,8 @@ var ViewModel = function() {
   };
 
   self.reset = function() {
-    window.location.reload();
+    //window.location.reload();
+    directionsDisplay.setMap(null);
   };
 };
 
@@ -271,6 +284,10 @@ function initMap() {
   ko.applyBindings(new ViewModel());
 }
 
+function iniMapErrorHandler() {
+  window.alert("Failed to load Google Maps APIs.");
+  console.log("Failed to load Google Maps APIs.");
+}
 // This function takes in a COLOR, and then creates a new marker
 // icon of that color. The icon will be 21 px wide by 34 high, have an origin
 // of 0, 0 and be anchored at 10, 34).
