@@ -185,6 +185,9 @@ var ViewModel = function() {
               console.log(store.wiki);
               self.stores.push(new Bookstore(store));
               clearTimeout(wikiRequestTimeout);
+              if (self.stores().length === locations.length) {
+                self.showListings();
+              }
           }
       });
   });

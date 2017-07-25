@@ -9,44 +9,47 @@
   </head>
   <body>
     <div class="container">
-      <div class="options-box">
-        <h1>Independent Bookstores In Bay Area</h1>
-        <div class="line-divider"></div>
-        <div>
-          <input id="show-listings" type="button" value="Show Listings" data-bind="click: showListings">
-          <input id="hide-listings" type="button" value="Hide Listings" data-bind="click: hideMarkers">
-        </div>
-        <div class="line-divider-big"></div>
-        <h2>Search For A Bookstore:</h2>
-        <input id="filter" placeholder="Type here to filter..." data-bind="textInput: filter">
-        <div id="listview">
-            <ul class="scrollbar" data-bind="foreach: filteredResults">
-                <div class="store-item">
-                    <a href="#" data-bind="click: $root.clickItem">
-                        <span class="store-name" data-bind="text: title"></span>
-                    </a>
-                </div>
-            </ul>
-        </div>
-        <div class="line-divider-big"></div>
-        <div>
-          <h2>Show Directions</h2>
-          <input id="start" type="text" data-bind="textInput: originAddress" placeholder="Enter your location">
-          <input id="end" type="text" data-bind="textInput: destinationAddress" placeholder="Enter a bookstore">
+      <div class="row padding-top padding-bottom">
+        <div class="options-box col-md-4">
+          <h1>Independent Bookstores In Bay Area</h1>
           <div class="line-divider"></div>
-          <span class="text"> Choose Travel Mode: </span>
-          <select id="mode" data-bind="value: mode">
-            <option value="DRIVING">drive</option>
-            <option value="WALKING">walk</option>
-            <option value="BICYCLING">bike</option>
-            <option value="TRANSIT">transit ride</option>
-          </select>
-          <div class="line-divider"></div>
-          <input id="search" data-bind="click: getDirections" type="button" value="Go">
-          <input id="reset" data-bind="click: reset" type="button" value="Reset">
+          <div>
+            <input id="show-listings" type="button" value="Show Listings" data-bind="click: showListings">
+            <input id="hide-listings" type="button" value="Hide Listings" data-bind="click: hideMarkers">
+          </div>
+          <div class="line-divider-big"></div>
+          <h2>Search For A Bookstore:</h2>
+          <input id="filter" placeholder="Type here to filter..." data-bind="textInput: filter">
+          <div id="listview">
+              <ul class="scrollbar" data-bind="foreach: filteredResults">
+                  <div class="store-item">
+                      <a href="#" data-bind="click: $root.clickItem">
+                          <span class="store-name" data-bind="text: title"></span>
+                      </a>
+                  </div>
+              </ul>
+          </div>
+          <div class="line-divider-big"></div>
+          <div>
+            <h2>Show Directions</h2>
+            <input id="start" type="text" data-bind="textInput: originAddress" placeholder="Enter your location">
+            <input id="end" type="text" data-bind="textInput: destinationAddress" placeholder="Enter a bookstore">
+            <div class="line-divider"></div>
+            <span class="text"> Choose Travel Mode: </span>
+            <select id="mode" data-bind="value: mode">
+              <option value="DRIVING">drive</option>
+              <option value="WALKING">walk</option>
+              <option value="BICYCLING">bike</option>
+              <option value="TRANSIT">transit ride</option>
+            </select>
+            <div class="line-divider"></div>
+            <input id="search" data-bind="click: getDirections" type="button" value="Go">
+            <input id="reset" data-bind="click: reset" type="button" value="Reset">
+          </div>
         </div>
+        <div id="map" class="col-md-7"></div>
+        <div class="col-md-1"></div>
       </div>
-      <div id="map"></div>
     </div>
     <script src="js/app.js"></script>
     <script type="text/javascript" src="js/lib/knockout-3.4.2.js"></script>
