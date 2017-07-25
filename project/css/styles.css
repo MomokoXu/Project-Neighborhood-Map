@@ -36,12 +36,12 @@ body {
 .store-name {
   min-height: 450px;
   text-align: left;
+  margin-left: 1.5vw;
 }
 
 #listview {
   text-align: left;
   width: 30vw;
-  margin: auto;
 }
 
 input {

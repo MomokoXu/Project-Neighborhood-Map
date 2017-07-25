@@ -21,13 +21,13 @@
           <h2>Search For A Bookstore:</h2>
           <input id="filter" placeholder="Type here to filter..." data-bind="textInput: filter">
           <div id="listview">
-              <ul class="scrollbar" data-bind="foreach: filteredResults">
+              <div class="scrollbar" data-bind="foreach: filteredResults">
                   <div class="store-item">
                       <a href="#" data-bind="click: $root.clickItem">
                           <span class="store-name" data-bind="text: title"></span>
                       </a>
                   </div>
-              </ul>
+              </div>
           </div>
           <div class="line-divider-big"></div>
           <div>
