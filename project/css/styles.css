@@ -76,9 +76,8 @@ h2 {
 #map {
   border: 1px solid #999;
   border-radius: 3px;
-  top:2vh;
-  bottom:2vh;
-  height: 100%;
+  top:10vh;
+  bottom:1vh;
   left: 35vw;
   position: absolute;
   right: 5vw;
@@ -97,6 +96,7 @@ h2 {
   margin-bottom: 2vh;
   margin-right: 5vw;
   margin-left: 2vw;
+  bottom:2vh;
 }
 
 
