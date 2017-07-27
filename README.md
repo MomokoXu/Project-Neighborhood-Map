@@ -12,7 +12,7 @@ This project aims to set up a web application featuring a list of great bookstor
 ## Languages and Tools
 
 * Languages: Javascript, HTML, CSS
-* APIs: Google Maps APIs, Wiki Opensearch API
+* APIs: Google Maps APIs, Foursquare API
 * Tools: Knouckout.js, jQuery, Bootstrap
 ---
 
