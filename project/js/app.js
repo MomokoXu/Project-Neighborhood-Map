@@ -2,26 +2,26 @@ var map;
 
 // Location data
 var locations = [
-  {title: "The Booksmith", lat: 37.7698021, lng: -122.4494117, wiki:[""]},
-  {title: "Kepler's Books", lat: 37.453569, lng: -122.182167, wiki:[""]},
-  {title: "Feldman's Books", lat: 37.454151, lng: -122.1838146, wiki:[""]},
-  {title: "Bell's Books", lat: 37.44405680000001, lng: -122.1622352, wiki:[""]},
-  {title: "B Street Books", lat: 37.565544, lng: -122.322034, wiki:[""]},
-  {title: "Recycle Bookstore", lat: 37.331286, lng: -121.911065, wiki:[""]},
-  {title: "Moe's Books", lat: 37.865464, lng: -122.258804, wiki:[""]},
-  {title: "Builders Booksource", lat:  37.86948050000001, lng: -122.3003344, wiki:[""]},
-  {title: "Mrs Dalloway's", lat: 37.8581708, lng: -122.25329, wiki:[""]},
-  {title: "Aardvark Books", lat: 37.7670568, lng: -122.4285774, wiki:[""]},
-  {title: "Green Apple Books", lat: 37.78304500000001, lng: -122.464715, wiki:[""]},
-  {title: "City Lights Booksellers & Publishers", lat: 37.7976073, lng: -122.4065603, wiki:[""]},
-  {title: "Browser Books", lat: 37.7896729, lng: -122.4342177, wiki:[""]},
-  {title: "Omnivore Books on Food", lat: 37.7476028, lng:-122.42667349999999, wiki:[""]},
-  {title: "Alley Cat Bookstore and Gallery ", lat: 37.752764, lng: -122.41270700000001, wiki:[""]},
-  {title: "Dog Eared Books", lat: 37.758404, lng: -122.42150049999998, wiki:[""]},
-  {title: "ARKIPELAGO Books The Filipino Bookstore", lat: 37.780847, lng: -122.40927199999999, wiki:[""]},
-  {title: "Adobe Books & Arts Cooperative", lat:37.7526611 , lng: -122.4148131, wiki:[""]},
-  {title: "Bound Together Bookstore", lat: 37.7653663, lng:-122.46659979999998 , wiki:[""]},
-  {title: "Kinokuniya San Francisco ", lat: 37.785046, lng:-122.43209300000001 , wiki:[""]},
+  {title: "The Booksmith", lat: 37.7698021, lng: -122.4494117, count: 0},
+  {title: "Kepler's Books", lat: 37.453569, lng: -122.182167, count: 0},
+  {title: "Feldman's Books", lat: 37.454151, lng: -122.1838146, count: 0},
+  {title: "Bell's Books", lat: 37.44405680000001, lng: -122.1622352, count: 0},
+  {title: "B Street Books", lat: 37.565544, lng: -122.322034, count: 0},
+  {title: "Recycle Bookstore", lat: 37.331286, lng: -121.911065, count: 0},
+  {title: "Moe's Books", lat: 37.865464, lng: -122.258804, count: 0},
+  {title: "Builders Booksource", lat:  37.86948050000001, lng: -122.3003344, count: 0},
+  {title: "Mrs Dalloway's", lat: 37.8581708, lng: -122.25329, count: 0},
+  {title: "Aardvark Books", lat: 37.7670568, lng: -122.4285774, count: 0},
+  {title: "Green Apple Books", lat: 37.78304500000001, lng: -122.464715, count: 0},
+  {title: "City Lights Booksellers & Publishers", lat: 37.7976073, lng: -122.4065603, count: 0},
+  {title: "Browser Books", lat: 37.7896729, lng: -122.4342177, count: 0},
+  {title: "Omnivore Books on Food", lat: 37.7476028, lng:-122.42667349999999, count: 0},
+  {title: "Alley Cat Bookstore and Gallery ", lat: 37.752764, lng: -122.41270700000001, count: 0},
+  {title: "Dog Eared Books", lat: 37.758404, lng: -122.42150049999998, count: 0},
+  {title: "ARKIPELAGO Books The Filipino Bookstore", lat: 37.780847, lng: -122.40927199999999, count: 0},
+  {title: "Adobe Books & Arts Cooperative", lat:37.7526611 , lng: -122.4148131, count: 0},
+  {title: "Bound Together Bookstore", lat: 37.7653663, lng:-122.46659979999998 , count: 0},
+  {title: "Kinokuniya San Francisco ", lat: 37.785046, lng:-122.43209300000001 , count: 0},
 ];
 
 // Model
@@ -30,7 +30,7 @@ function Bookstore(data) {
   self.title = data.title;
   self.lat = data.lat;
   self.lng = data.lng;
-  self.wiki = data.wiki;
+  self.count = data.count;
 
   // Style the markers a bit. This will be our listing marker icon.
   self.defaultIcon = makeMarkerIcon('64d6d1');
@@ -86,15 +86,8 @@ function Bookstore(data) {
                 innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
                     {maxHeight: 100, maxWidth: 200}) + '">';
               }
-              innerHTML += '</div><br><br>' + '<div>Wiki</div>';
-
-              if (self.wiki.length !== 0) {
-                var url = 'https://en.wikipedia.org/wiki/' + self.wiki;
-                innerHTML += '<li><a href="' + url + '">' + self.wiki + '</a></li>';
-              } else {
-                innerHTML += '<div>No related Wiki</div>';
-              }
-              console.log(self.wiki);
+              innerHTML += '</div><br><br>' + '<div>Number of Checkins: </div>';
+              innerHTML += '<strong>' + self.count + '</strong>';
               self.largeInfowindow.setContent(innerHTML);
             } else {
               window.alert("Fail to load information window due to" + status);
@@ -165,30 +158,32 @@ var ViewModel = function() {
   self.originAddress = ko.observable('');
   self.destinationAddress = ko.observable('');
   self.mode = ko.observable('');
-
-  // update stores with asyn wiki info
+  var CLIENT_ID = 'CG0GBSKN10CT4NLH5EYEGE5RPBEW2O3PGWVAPO4RAPKKL5ZU';
+  var CLIENT_SECRET = '5QW4S55LFXLBSLTA0DGKSL0O3AHJREQKFWAHYA3OAVO5XF3O';  // update stores with asyn foursquare info
   locations.forEach(function(store) {
-      var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search='+ store.title + '&format=json&callback=wikiCallback';
-      // error handling:
-      // if no response after 8000 miliseconds later, text for error will show up
-      var wikiRequestTimeout = setTimeout(function(){
-          $wikiElem.text("Failed to get wikipedia resources for" + store.title);
+      var fqRequestTimeout = setTimeout(function(){
+          window.alert("Failed to get foursquare resources for" + store.title);
       }, 8000);
-      // ajax request object
-      $.ajax({
-          url: wikiUrl,
-          // set datatype indicating this is a jsonp request
-          dataType: "jsonp",
-          // jsonp: "callback",
-          success: function(response) {
-              store.wiki = response[1];
-              console.log(store.wiki);
-              self.stores.push(new Bookstore(store));
-              clearTimeout(wikiRequestTimeout);
-              if (self.stores().length === locations.length) {
-                self.showListings();
-              }
+      $.ajax ({
+        url:'https://api.foursquare.com/v2/venues/search',
+        dataType:'json',
+        data: 'limit=1' +
+              '&ll='+ store.lat +','+ store.lng +
+              '&client_id='+ CLIENT_ID +
+              '&client_secret='+ CLIENT_SECRET+
+              '&v=20170727' +
+              '&m=foursquare',
+        async: true,
+        success: function(data) {
+          var result = data.response.venues;
+          var cnt = result[0].hasOwnProperty('stats') ? result[0].stats.checkinsCount : 0;
+          store.count = cnt;
+          self.stores.push(new Bookstore(store));
+          clearTimeout(fqRequestTimeout);
+          if (self.stores().length === locations.length) {
+            self.showListings();
           }
+        }
       });
   });
 
