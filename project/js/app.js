@@ -93,6 +93,8 @@ function Bookstore(data) {
               window.alert("Fail to load information window due to" + status);
             }
           });
+        } else {
+            window.alert("Fail to load information window due to" + status);
         }
       });
     }
@@ -158,12 +160,9 @@ var ViewModel = function() {
   self.originAddress = ko.observable('');
   self.destinationAddress = ko.observable('');
   self.mode = ko.observable('');
-  var CLIENT_ID = 'CG0GBSKN10CT4NLH5EYEGE5RPBEW2O3PGWVAPO4RAPKKL5ZU';
-  var CLIENT_SECRET = '5QW4S55LFXLBSLTA0DGKSL0O3AHJREQKFWAHYA3OAVO5XF3O';  // update stores with asyn foursquare info
+  var CLIENT_ID = '5SCUPBLJFKZE0H5DT4RINHNONNU434IZD0FINUAJ5PLAPN5Z';
+  var CLIENT_SECRET = 'XSG04DTKKYNOSHIAFJGIX2YD3AMOK0BM3OZ1LWB5SEWMZBHP';  // update stores with asyn foursquare info
   locations.forEach(function(store) {
-      var fqRequestTimeout = setTimeout(function(){
-          window.alert("Failed to get foursquare resources for" + store.title);
-      }, 8000);
       $.ajax ({
         url:'https://api.foursquare.com/v2/venues/search',
         dataType:'json',
@@ -173,17 +172,19 @@ var ViewModel = function() {
               '&client_secret='+ CLIENT_SECRET+
               '&v=20170727' +
               '&m=foursquare',
-        async: true,
-        success: function(data) {
-          var result = data.response.venues;
-          var cnt = result[0].hasOwnProperty('stats') ? result[0].stats.checkinsCount : 0;
-          store.count = cnt;
-          self.stores.push(new Bookstore(store));
-          clearTimeout(fqRequestTimeout);
-          if (self.stores().length === locations.length) {
-            self.showListings();
-          }
+        async: true
+      })
+      .done(function(data, response) {
+        var result = data.response.venues;
+        var cnt = result[0].hasOwnProperty('stats') ? result[0].stats.checkinsCount : 0;
+        store.count = cnt;
+        self.stores.push(new Bookstore(store));
+        if (self.stores().length === locations.length) {
+          self.showListings();
         }
+      })
+      .fail(function() {
+          window.alert('Failed to get foursquare resources for ' + store.title);
       });
   });
 

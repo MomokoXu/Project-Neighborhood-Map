@@ -12,21 +12,11 @@ body {
 }
 
 .line-divider {
-  margin: 1.5vw;
+  margin: 2vw;
 }
 
 .line-divider-big {
-  margin: 3vw;
-}
-
-.scrollbar {
-  height: 25vh;
-  width: 25vw;
-  background: #F5F5F5;
-  overflow-y: scroll;
-  margin-bottom: 1vh;
-  margin-top: 1vh;
-  font-size: 1vw;
+  margin: 5vw;
 }
 
 .store-item {
@@ -41,23 +31,22 @@ body {
 
 #listview {
   text-align: left;
-  width: 30vw;
 }
 
 input {
-  font-size: 1.5vw;
+  font-size: 1.3em;
 }
 
 h1 {
   color: #525454;
-  font-size: 2.5vw;
+  font-size: 2.5em;
   margin: 0 0 10px 0;
   text-align: center;
 }
 
 h2 {
   color: #525454;
-  font-size: 1.5vw;
+  font-size: 2em;
   margin: 0 0 1vw 0;
   text-align: left
 }
@@ -66,21 +55,25 @@ h2 {
 #show-listings,
 #search, #reset {
   width: 48%;
-  font-size: 1vw;
+  font-size: 1em;
 }
 
 .store-name:hover {
   background-color: yellow;
 }
 
+.map-container {
+  height: 100vh;
+}
+
 #map {
   border: 1px solid #999;
   border-radius: 3px;
-  top:10vh;
-  bottom:1vh;
-  left: 35vw;
   position: absolute;
-  right: 5vw;
+  top: 1vh;
+  bottom: 1vh;
+  left: 2vw;
+  right:1em;
 }
 
 .options-box {
@@ -91,24 +84,29 @@ h2 {
   line-height: 35px;
   padding: 2vw 2vw 2vw 2vw;
   text-align: left;
-  width: 30vw;
   margin-top: 2vh;
   margin-bottom: 2vh;
-  margin-right: 5vw;
-  margin-left: 2vw;
   bottom:2vh;
 }
 
+.scrollbar {
+  height: 25vh;
+  background: #F5F5F5;
+  overflow-y: scroll;
+  margin-bottom: 1vh;
+  margin-top: 1vh;
+  font-size: 1.2em;
+}
 
 .text {
-  font-size: 1vw;
+  font-size: 1em;
 }
 
 #filter, #start, #end {
-  width: 20vw;
-  font-size: 1vw;
+  width: 25vw;
+  font-size: 1em;
 }
 
 #mode {
-  font-size: 1vw;
+  font-size: 1.5em;
 }
