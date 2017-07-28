@@ -95,6 +95,7 @@ h2 {
   overflow-y: scroll;
   margin-bottom: 1vh;
   margin-top: 1vh;
+  padding: 1vw 1vw 1vw 1vw;
   font-size: 1.2em;
 }
 
@@ -108,5 +109,5 @@ h2 {
 }
 
 #mode {
-  font-size: 1.5em;
+  font-size: 1em;
 }
