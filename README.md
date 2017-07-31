@@ -15,7 +15,7 @@ This project aims to set up a web application featuring a list of great bookstor
 
 * Languages: Javascript, HTML, CSS
 * APIs: Google Maps APIs, Foursquare API
-* Tools: Knouckout.js, jQuery, Bootstrap
+* Tools: Knouckout.js, jQuery, Bootstrap, Firebase
 ---
 
 ## How to use it:
@@ -23,6 +23,8 @@ This project aims to set up a web application featuring a list of great bookstor
 1. Clone this repo or download it.
     * Clone: `git clone https://github.com/MomokoXu/Project-Neighborhood-Map`
 2. Switch to `project` and click `index.html`
+
+3. App has been deployed on [Firebase](https://console.firebase.google.com)
 
 ## Author
 [Yingtao Xu](https://github.com/MomokoXu)
