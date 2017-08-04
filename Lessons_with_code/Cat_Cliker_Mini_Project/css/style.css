@@ -1,0 +1,40 @@
+
+img {
+  height: 300px;
+  width: 300px;
+}
+
+h1 {
+  font-family: "Helvetica Neue Light", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 50px;
+  color: #51453B;
+  line-height: 60px;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 24px;
+  color: #42C3C9;
+  line-height: 29px;
+  cursor: pointer;
+}
+
+h3 {
+  font-size: 18px;
+  color: #4A4A4A;
+  line-height: 23px;
+}
+
+.cat-display, img#cat-img {
+  cursor: pointer;
+}
+
+.cat-list {
+  margin-top: 100px;
+}
+
+.flash {
+  margin-top: 100px;
+  font-size: 24px;
+  color: red;
+}
