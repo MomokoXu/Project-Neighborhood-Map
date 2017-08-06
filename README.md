@@ -6,7 +6,9 @@
 
 [**Click here to open APP**](https://bookstoreapp-645f9.firebaseapp.com/)
 
-This project aims to set up a web application featuring a list of great bookstores in Bay Area. By Google Maps APIs, users are able to find a list of the bookstores shown with markers on the map, search a particualr bookstore by typing in the bookstore's name. Also, by cliking the marker for each bookstore, users can get detailed information from the information window about that store with store's name, address, opening hours and a picture of that store. Number of checkins are also avaliable in the information window to show how hot this bookstore is. In addition, users are also able to get directions from any location to a particular store in the list by different traveling mode.
+This project aims to set up a application featuring a list of great independent bookstores in Bay Area.
+By Google Maps APIs, users are able to find a list of bookstores shown with markers on the map, hide the list, search a particular bookstore, get directions from any location to a particular listed bookstore by different travelling mode.
+Each store has a information window to provide users information like store’s name, address, opening hours, image of the store, and number if checkins of the store.
 
 ![image of the web](https://github.com/MomokoXu/Project-Neighborhood-Map/blob/master/project/sampleimage.png)
 
