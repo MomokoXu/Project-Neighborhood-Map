@@ -103,9 +103,9 @@ h2 {
   font-size: 1em;
 }
 
-#filter, #start, #end {
-  width: 25vw;
+input[type=text]{
   font-size: 1em;
+  width: 30vh;
 }
 
 #mode {
